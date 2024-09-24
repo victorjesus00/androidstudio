@@ -1,0 +1,149 @@
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Encontrar o botão de calculadora IMC
+        Button botaoIMC = findViewById(R.id.botaoIMC);
+
+        // Configurar o listener de clique
+        botaoIMC.setOnClickListener(v -> {
+        // Iniciar a CalculadoraIMCActivity
+        Intent intent = new Intent(this, CalculadoraIMCActivity.class);
+        startActivity(intent);
+    });
+
+        // Outros botões seguem aqui...
+            }
+}
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:padding="16dp">
+
+<Button
+android:id="@+id/botaoIMC"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="Calculadora IMC" />
+
+<!-- Outros botões seguem aqui... -->
+</LinearLayout>
+
+
+class CalculadoraIMCActivity : AppCompatActivity() {
+    private var pesoInput: EditText? = null
+    private var alturaInput: EditText? = null
+    private var resultadoIMC: TextView? = null
+    private var classificacao: TextView? = null
+
+    @Override
+    protected fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_calculadora_imc)
+
+        // Encontrar os elementos da interface
+        pesoInput = findViewById(R.id.pesoInput)
+        alturaInput = findViewById(R.id.alturaInput)
+        resultadoIMC = findViewById(R.id.resultadoIMC)
+        classificacao = findViewById(R.id.classificacao)
+
+        // Botão para calcular IMC
+        val calcularButton: Button = findViewById(R.id.calcularButton)
+        calcularButton.setOnClickListener { v -> calcularIMC() }
+
+        // Botão para limpar campos
+        val limparButton: Button = findViewById(R.id.limparButton)
+        limparButton.setOnClickListener { v -> limparCampos() }
+
+        // Botão de fechar a Activity
+        val botaoFechar: ImageButton = findViewById(R.id.botaoFechar)
+        botaoFechar.setOnClickListener { v -> finish() }
+    }
+
+    private fun calcularIMC() {
+        // Validar entradas
+        if (pesoInput.getText().toString().isEmpty() || alturaInput.getText().toString()
+                .isEmpty()
+        ) {
+            Toast.makeText(this, "Por favor, insira peso e altura.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val peso: Double = Double.parseDouble(pesoInput.getText().toString())
+        val altura: Double = Double.parseDouble(alturaInput.getText().toString())
+        val imc = peso / (altura * altura)
+
+        // Exibir resultado
+        resultadoIMC.setText(String.format("IMC: %.2f", imc))
+        classificacao.setText(classificarIMC(imc))
+    }
+
+    private fun classificarIMC(imc: Double): String {
+        // Classificação do IMC
+        return if (imc < 18.5) "Abaixo do peso"
+        else if (imc < 24.9) "Peso normal"
+        else if (imc < 29.9) "Sobrepeso"
+        else "Obesidade"
+    }
+
+    private fun limparCampos() {
+        // Limpar campos de entrada e resultado
+        pesoInput.setText("")
+        alturaInput.setText("")
+        resultadoIMC.setText("")
+        classificacao.setText("")
+    }
+}
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:padding="16dp">
+
+<ImageButton
+android:id="@+id/botaoFechar"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:src="@drawable/ic_close" />
+
+<EditText
+android:id="@+id/pesoInput"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:hint="Peso (kg)" />
+
+<EditText
+android:id="@+id/alturaInput"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:hint="Altura (m)" />
+
+<Button
+android:id="@+id/calcularButton"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="Calcular IMC" />
+
+<TextView
+android:id="@+id/resultadoIMC"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content" />
+
+<TextView
+android:id="@+id/classificacao"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content" />
+
+<Button
+android:id="@+id/limparButton"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="Limpar" />
+</LinearLayout>
